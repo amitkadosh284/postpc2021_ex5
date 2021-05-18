@@ -9,10 +9,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
   public TodoItemsHolder holder = null;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +25,29 @@ public class MainActivity extends AppCompatActivity {
     if (holder == null) {
       holder = new TodoItemsHolderImpl();
     }
+
+    //finds the views
+    RecyclerView recyclerView = findViewById(R.id.recyclerTodoItemsList);
+    EditText editTextInsertTask = findViewById(R.id.editTextInsertTask);
+    Button buttonCreateTodoItem = findViewById(R.id.buttonCreateTodoItem);
+
+    ItemAdapter adapter = new ItemAdapter();
+    adapter.setTodoItemList(holder.getCurrentItems());
+
+    //sets the view
+    recyclerView.setAdapter(adapter);
+    recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, true));
+    buttonCreateTodoItem.setEnabled(true);
+    editTextInsertTask.setVisibility(View.VISIBLE);
+
+    buttonCreateTodoItem.setOnClickListener(v -> {
+      String input = String.valueOf(editTextInsertTask.getText());
+      if (!input.isEmpty()){
+        holder.addNewInProgressItem(input);
+        editTextInsertTask.setText("");
+      }
+    });
+
 
     // TODO: implement the specs as defined below
     //    (find all UI components, hook them up, connect everything you need)
