@@ -1,18 +1,21 @@
 package exercise.android.reemh.todo_items;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-// TODO: implement!
 public class TodoItemsHolderImpl implements TodoItemsHolder {
+
+  List<TodoItem> toDoList = new Vector<>();
+  List<TodoItem> doneItems = new Vector<>();
+
+
   @Override
   public List<TodoItem> getCurrentItems() {
     List<TodoItem> combine = new Vector<>();
     combine.addAll(doneItems);
     combine.addAll(toDoList);
-    if (combine.isEmpty() ){
-      return null;
-    }
+    Collections.reverse(combine);
     return combine;
   }
 
@@ -43,4 +46,5 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     }
     toDoList.remove(item);
   }
+
 }

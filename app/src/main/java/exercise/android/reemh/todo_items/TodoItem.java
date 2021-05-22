@@ -23,4 +23,6 @@ public class TodoItem implements Serializable {
     String getDescription(){
       return this.description;
     }
+
+    void setDescription(String description){ this.description = description;}
 }

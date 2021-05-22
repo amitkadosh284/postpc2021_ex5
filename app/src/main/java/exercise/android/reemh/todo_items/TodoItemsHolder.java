@@ -1,15 +1,13 @@
 package exercise.android.reemh.todo_items;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 
-// TODO: feel free to add/change/remove methods as you want
-public interface TodoItemsHolder {
+public interface TodoItemsHolder extends Serializable {
 
-  List<TodoItem> toDoList = new Vector<>();
-  List<TodoItem> doneItems = new Vector<>();
 
   /** Get a copy of the current items list */
   List<TodoItem> getCurrentItems();
@@ -28,5 +26,7 @@ public interface TodoItemsHolder {
 
   /** delete the @param item */
   void deleteItem(TodoItem item);
+
+
 
 }
