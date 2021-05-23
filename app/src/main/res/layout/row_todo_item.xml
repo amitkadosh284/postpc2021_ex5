@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:minHeight="40dp">
 
-    <!-- TODO: edit this file as you want-->
 
     <CheckBox
         android:id="@+id/checkBox"
