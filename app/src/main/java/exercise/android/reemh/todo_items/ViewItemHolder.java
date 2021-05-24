@@ -16,7 +16,7 @@ public class ViewItemHolder extends RecyclerView.ViewHolder {
 
     public ViewItemHolder(@NonNull View itemView) {
         super(itemView);
-        description = itemView.findViewById(R.id.description);
+        description = itemView.findViewById(R.id.descriptionEdit);
         checkBox = itemView.findViewById(R.id.checkBox);
         trash = itemView.findViewById(R.id.trash);
     }

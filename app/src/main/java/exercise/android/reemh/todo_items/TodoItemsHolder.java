@@ -1,5 +1,7 @@
 package exercise.android.reemh.todo_items;
 
+import androidx.lifecycle.LiveData;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,13 @@ public interface TodoItemsHolder extends Serializable {
   /** delete the @param item */
   void deleteItem(TodoItem item);
 
+  /**edit the @param item's description */
+   void editDescription(TodoItem item, String description);
 
+   /** get the live data */
+  LiveData<List<TodoItem>> getPublicItemsLiveData();
+
+  /** get TodoItem by Id */
+  TodoItem getById(String id);
 
 }

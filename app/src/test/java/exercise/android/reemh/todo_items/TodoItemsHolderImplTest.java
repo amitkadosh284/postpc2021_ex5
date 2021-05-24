@@ -1,7 +1,5 @@
 package exercise.android.reemh.todo_items;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,7 +7,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_addingTodoItem_then_callingListShouldHaveThisItem(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -22,7 +20,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_addingTodoItem_then_callingListShouldHaveItemWithTheCorrectDescription(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -35,7 +33,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_removeTodoItem_then_callingListShouldNotHaveThisItem(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -49,7 +47,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_removeTodoItem_then_callingListShouldNotHaveItemWithTheDescription(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -69,7 +67,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_addingTodoItem_then_callingListShouldHaveThisItemInFront(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -83,7 +81,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_markTodoItem_asDone_callingListShouldNotHaveThisItemInFront(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -99,7 +97,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_markTodoItem_asInProgress_callingListShouldHaveThisItemInFront(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -116,7 +114,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_markTodoItem_asInProgress_itemStateShouldBe_InProgress(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -133,7 +131,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_markTodoItem_asDone_itemStateShouldBe_Done(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -148,7 +146,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void complexCheckTheListIsOrganizeFirstInProgressThenDoneItems(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test
@@ -174,7 +172,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void deletingItemInTheMiddleOfTheListDontChangeTheOrder(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl();
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test

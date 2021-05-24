@@ -22,6 +22,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ViewItemHolder> {
     private List<TodoItem> _todoItemList = new Vector<>();
     TodoItemsHolder todoItemsHolder;
     private boolean onBind;
+    Context context;
 
     ItemAdapter(TodoItemsHolder todoItemsHolder){
         onBind = false;
@@ -39,7 +40,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ViewItemHolder> {
     @NonNull
     @Override
     public ViewItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.row_todo_item, parent, false);
         return new ViewItemHolder(view);
     }
@@ -79,6 +80,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ViewItemHolder> {
             if(!onBind) {
                 todoItemsHolder.deleteItem(item);
                 setTodoItemList(todoItemsHolder.getCurrentItems());
+            }
+        });
+
+        holder.getDescription().setOnClickListener(v -> {
+            if(!onBind) {
+                Intent intentForEdit = new Intent(context, EditItemActivity.class);
+                intentForEdit.putExtra("id", item.getId());
+                context.startActivity(intentForEdit);
             }
         });
         onBind =false;

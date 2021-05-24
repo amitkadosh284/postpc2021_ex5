@@ -19,6 +19,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ActivityController;
 import org.robolectric.annotation.Config;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -27,7 +28,7 @@ import static org.mockito.ArgumentMatchers.eq;
 @Config(sdk = 28)
 public class MainActivityTest extends TestCase {
 
-  private ActivityController<MainActivity> activityController;
+  private ActivityController<TodoListActivity> activityController;
   private TodoItemsHolder mockHolder;
 
   @Before
@@ -37,18 +38,18 @@ public class MainActivityTest extends TestCase {
     Mockito.when(mockHolder.getCurrentItems())
       .thenReturn(new ArrayList<>());
 
-    activityController = Robolectric.buildActivity(MainActivity.class);
+    activityController = Robolectric.buildActivity(TodoListActivity.class);
 
     // let the activity use our `mockHolder` as the TodoItemsHolder
-    MainActivity activityUnderTest = activityController.get();
-    activityUnderTest.holder = mockHolder;
+    TodoListActivity activityUnderTest = activityController.get();
+    activityUnderTest.dataBase = mockHolder;
   }
 
   @Test
   public void when_activityIsLaunched_then_theEditTextStartsEmpty() {
     // setup
     activityController.create().visible();
-    MainActivity activityUnderTest = activityController.get();
+    TodoListActivity activityUnderTest = activityController.get();
     EditText editText = activityUnderTest.findViewById(R.id.editTextInsertTask);
     String userInput = editText.getText().toString();
     // verify
@@ -60,7 +61,7 @@ public class MainActivityTest extends TestCase {
     // setup
     String userInput = "Call my grandma today at 18:00";
     activityController.create().visible(); // let the activity think it is being shown
-    MainActivity activityUnderTest = activityController.get();
+    TodoListActivity activityUnderTest = activityController.get();
     EditText editText = activityUnderTest.findViewById(R.id.editTextInsertTask);
     View fab = activityUnderTest.findViewById(R.id.buttonCreateTodoItem);
 
@@ -77,7 +78,7 @@ public class MainActivityTest extends TestCase {
     // setup
     String userInput = "Call my grandma today at 18:00";
     activityController.create().visible(); // let the activity think it is being shown
-    MainActivity activityUnderTest = activityController.get();
+    TodoListActivity activityUnderTest = activityController.get();
     EditText editText = activityUnderTest.findViewById(R.id.editTextInsertTask);
     View fab = activityUnderTest.findViewById(R.id.buttonCreateTodoItem);
 
@@ -99,7 +100,7 @@ public class MainActivityTest extends TestCase {
     activityController.create().visible();
 
     // verify
-    MainActivity activityUnderTest = activityController.get();
+    TodoListActivity activityUnderTest = activityController.get();
     RecyclerView recyclerView = activityUnderTest.findViewById(R.id.recyclerTodoItemsList);
     RecyclerView.Adapter adapter = recyclerView.getAdapter();
     assertNotNull(adapter);
@@ -114,7 +115,7 @@ public class MainActivityTest extends TestCase {
     ArrayList<TodoItem> itemsReturnedByHolder = new ArrayList<>();
     Mockito.when(mockHolder.getCurrentItems())
       .thenReturn(itemsReturnedByHolder);
-    TodoItem itemInProgress = new TodoItem("");
+    TodoItem itemInProgress = new TodoItem("", LocalDateTime.now().toString());
     itemInProgress.setDone(false);
     itemInProgress.setDescription("do homework");
     itemsReturnedByHolder.add(itemInProgress);
@@ -123,7 +124,7 @@ public class MainActivityTest extends TestCase {
     activityController.create().visible();
 
     // verify: make sure that the activity shows a matching subview in the recycler view
-    MainActivity activityUnderTest = activityController.get();
+    TodoListActivity activityUnderTest = activityController.get();
     RecyclerView recyclerView = activityUnderTest.findViewById(R.id.recyclerTodoItemsList);
 
     // 1. verify that adapter says there should be 1 item showing
@@ -135,7 +136,7 @@ public class MainActivityTest extends TestCase {
     View viewInRecycler = recyclerView.findViewHolderForAdapterPosition(0).itemView;
 
     CheckBox checkBox = viewInRecycler.findViewById(R.id.checkBox);
-    TextView description = viewInRecycler.findViewById(R.id.description);
+    TextView description = viewInRecycler.findViewById(R.id.descriptionEdit);
 
     assertFalse(checkBox.isChecked());
     assertEquals("do homework", description.getText());
@@ -150,7 +151,7 @@ public class MainActivityTest extends TestCase {
     ArrayList<TodoItem> itemsReturnedByHolder = new ArrayList<>();
     Mockito.when(mockHolder.getCurrentItems())
       .thenReturn(itemsReturnedByHolder);
-    TodoItem itemDone = new TodoItem("");
+    TodoItem itemDone = new TodoItem("", LocalDateTime.now().toString());
     itemDone.setDone(true);
     itemDone.setDescription("buy tomatoes");
     itemsReturnedByHolder.add(itemDone);
@@ -159,7 +160,7 @@ public class MainActivityTest extends TestCase {
     activityController.create().visible();
 
     // verify: make sure that the activity shows a matching subview in the recycler view
-    MainActivity activityUnderTest = activityController.get();
+    TodoListActivity activityUnderTest = activityController.get();
     RecyclerView recyclerView = activityUnderTest.findViewById(R.id.recyclerTodoItemsList);
 
     // 1. verify that adapter says there should be 1 item showing
@@ -171,7 +172,7 @@ public class MainActivityTest extends TestCase {
     View viewInRecycler = recyclerView.findViewHolderForAdapterPosition(0).itemView;
 
     CheckBox checkBox = viewInRecycler.findViewById(R.id.checkBox);
-    TextView description = viewInRecycler.findViewById(R.id.description);
+    TextView description = viewInRecycler.findViewById(R.id.descriptionEdit);
 
     assertTrue(checkBox.isChecked());
     assertEquals("buy tomatoes", description.getText());

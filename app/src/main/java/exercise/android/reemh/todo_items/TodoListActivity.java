@@ -1,36 +1,35 @@
 package exercise.android.reemh.todo_items;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.List;
 
-  public TodoItemsHolder holder = null;
+public class TodoListActivity extends AppCompatActivity {
+
+  public TodoItemsHolder dataBase = null;
   public ItemAdapter adapter = null;
 
 
+  @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    if (holder == null) {
-      holder = new TodoItemsHolderImpl();
+    if (dataBase == null) {
+      dataBase = TodoListApplication.getInstance().getDataBase();
     }
 
     //finds the views
@@ -38,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextInsertTask = findViewById(R.id.editTextInsertTask);
     FloatingActionButton buttonCreateTodoItem = findViewById(R.id.buttonCreateTodoItem);
 
-    adapter = new ItemAdapter(holder);
+    adapter = new ItemAdapter(dataBase);
 
     //sets the view
     recyclerView.setAdapter(adapter);
@@ -47,11 +46,18 @@ public class MainActivity extends AppCompatActivity {
     buttonCreateTodoItem.setEnabled(true);
     editTextInsertTask.setVisibility(View.VISIBLE);
 
+    dataBase.getPublicItemsLiveData().observe(this, new Observer<List<TodoItem>>() {
+      @Override
+      public void onChanged(List<TodoItem> todoItems) {
+        adapter.setTodoItemList(todoItems);
+      }
+    });
+
     buttonCreateTodoItem.setOnClickListener(v -> {
       String input = String.valueOf(editTextInsertTask.getText());
       if (!input.isEmpty()){
-        holder.addNewInProgressItem(input);
-        adapter.setTodoItemList(holder.getCurrentItems());
+        dataBase.addNewInProgressItem(input);
+        adapter.setTodoItemList(dataBase.getCurrentItems());
         editTextInsertTask.setText("");
       }
     });
@@ -61,14 +67,14 @@ public class MainActivity extends AppCompatActivity {
   @Override
   protected void onSaveInstanceState (@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
-    outState.putSerializable("holder", holder);
+    outState.putSerializable("holder", dataBase);
   }
 
   @Override
   protected void onRestoreInstanceState(@NonNull Bundle savesInstanceState){
     super.onRestoreInstanceState(savesInstanceState);
-    holder = (TodoItemsHolder) savesInstanceState.get("holder");
-    adapter.setTodoItemList(holder.getCurrentItems());
+    dataBase = (TodoItemsHolder) savesInstanceState.get("holder");
+    adapter.setTodoItemList(dataBase.getCurrentItems());
   }
 
 }
