@@ -27,7 +27,6 @@ public class TodoListActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-
     if (dataBase == null) {
       dataBase = TodoListApplication.getInstance().getDataBase();
     }
@@ -46,13 +45,10 @@ public class TodoListActivity extends AppCompatActivity {
     buttonCreateTodoItem.setEnabled(true);
     editTextInsertTask.setVisibility(View.VISIBLE);
 
-    dataBase.getPublicItemsLiveData().observe(this, new Observer<List<TodoItem>>() {
-      @Override
-      public void onChanged(List<TodoItem> todoItems) {
-        adapter.setTodoItemList(todoItems);
-      }
-    });
+    //set observer to the liveData
+    dataBase.getPublicItemsLiveData().observe(this, todoItems -> adapter.setTodoItemList(todoItems));
 
+    //set listener to create item button
     buttonCreateTodoItem.setOnClickListener(v -> {
       String input = String.valueOf(editTextInsertTask.getText());
       if (!input.isEmpty()){

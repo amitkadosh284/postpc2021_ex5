@@ -20,7 +20,7 @@ public class TodoItemsHolderImplTest {
   @Test
   public void when_addingTodoItem_then_callingListShouldHaveItemWithTheCorrectDescription(){
     // setup
-    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(context);
+    TodoItemsHolderImpl holderUnderTest = new TodoItemsHolderImpl(contex);
     Assert.assertEquals(0, holderUnderTest.getCurrentItems().size());
 
     // test

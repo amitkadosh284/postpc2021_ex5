@@ -19,15 +19,13 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
 
   private final List<TodoItem> toDoList = new Vector<>();
   private final List<TodoItem> doneItems = new Vector<>();
-  private final Context context;
-  private final SharedPreferences sp;
+  private transient final SharedPreferences sp;
 
-  private final MutableLiveData<List<TodoItem>> privateItemsLivaData = new MutableLiveData<>();
-  public final LiveData<List<TodoItem>> publicItemsLiveData = privateItemsLivaData;
+  private transient final MutableLiveData<List<TodoItem>> privateItemsLivaData = new MutableLiveData<>();
+  public transient final LiveData<List<TodoItem>> publicItemsLiveData = privateItemsLivaData;
 
   @RequiresApi(api = Build.VERSION_CODES.O)
   public TodoItemsHolderImpl(Context context) {
-    this.context = context;
     sp = context.getSharedPreferences("local_db_todo_list", Context.MODE_PRIVATE);
     initializeFromSp();
   }
@@ -38,6 +36,9 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     Set<String> keys = sp.getAll().keySet();
     for (String key: keys) {
       String itemSaveAsString = sp.getString(key, null);
+      System.out.println("****************************************************************************");
+      System.out.println(itemSaveAsString);
+      System.out.println("****************************************************************************");
       TodoItem item = stringToItem(itemSaveAsString);
       if (item != null){
         if (item.isDone()){
@@ -51,6 +52,11 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     privateItemsLivaData.setValue(getCurrentItems());
   }
 
+  /**
+   * this function make a TodoItem from string
+   * @param itemSaveAsString = the string represent the item
+   * @return a TodoItem withe the data from the string
+   */
   @RequiresApi(api = Build.VERSION_CODES.O)
   private TodoItem stringToItem(String itemSaveAsString) {
     if (itemSaveAsString == null){
@@ -69,6 +75,7 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     newItem.setLastModification(lastModification);
     return newItem;
   }
+
 
   @Override
   public LiveData<List<TodoItem>> getPublicItemsLiveData(){
@@ -96,13 +103,14 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     combine.addAll(doneItems);
     combine.addAll(toDoList);
     Collections.reverse(combine);
+    System.out.println();
     return combine;
   }
 
   @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   public void addNewInProgressItem(String description) {
-    TodoItem item = new TodoItem(description, LocalDateTime.now().toString(), UUID.randomUUID().toString());
+    TodoItem item = new TodoItem(description, LocalDateTime.now().toString() , UUID.randomUUID().toString());
     toDoList.add(item);
 
     privateItemsLivaData.setValue(getCurrentItems());
@@ -140,7 +148,7 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     privateItemsLivaData.setValue(getCurrentItems());
 
     SharedPreferences.Editor editor = sp.edit();
-    editor.putString(item.getId(), item.getStringRepresentation());
+    editor.putString(newItem.getId(), newItem.getStringRepresentation());
     editor.apply();
   }
 
@@ -163,6 +171,7 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
   @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   public void editDescription(TodoItem item, String description) {
+    deleteItem(item);
     TodoItem newItem = new TodoItem(description, item.getTimeCreation(), item.getId());
     newItem.setDone(item.isDone());
     if (newItem.isDone()){
@@ -171,8 +180,6 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     else {
       toDoList.add(newItem);
     }
-
-    deleteItem(item);
 
     privateItemsLivaData.setValue(getCurrentItems());
 

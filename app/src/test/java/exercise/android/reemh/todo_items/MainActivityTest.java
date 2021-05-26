@@ -21,6 +21,7 @@ import org.robolectric.annotation.Config;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -115,7 +116,7 @@ public class MainActivityTest extends TestCase {
     ArrayList<TodoItem> itemsReturnedByHolder = new ArrayList<>();
     Mockito.when(mockHolder.getCurrentItems())
       .thenReturn(itemsReturnedByHolder);
-    TodoItem itemInProgress = new TodoItem("", LocalDateTime.now().toString());
+    TodoItem itemInProgress = new TodoItem("", LocalDateTime.now().toString(), UUID.randomUUID().toString());
     itemInProgress.setDone(false);
     itemInProgress.setDescription("do homework");
     itemsReturnedByHolder.add(itemInProgress);
@@ -151,7 +152,7 @@ public class MainActivityTest extends TestCase {
     ArrayList<TodoItem> itemsReturnedByHolder = new ArrayList<>();
     Mockito.when(mockHolder.getCurrentItems())
       .thenReturn(itemsReturnedByHolder);
-    TodoItem itemDone = new TodoItem("", LocalDateTime.now().toString());
+    TodoItem itemDone = new TodoItem("", LocalDateTime.now().toString(), UUID.randomUUID().toString());
     itemDone.setDone(true);
     itemDone.setDescription("buy tomatoes");
     itemsReturnedByHolder.add(itemDone);

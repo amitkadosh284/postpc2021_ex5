@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +28,7 @@ public class EditItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_activity);
 
+        // getting the instance of the singleton dataBase
         if (dataBase == null) {
             dataBase = TodoListApplication.getInstance().getDataBase();
         }
@@ -34,18 +36,22 @@ public class EditItemActivity extends AppCompatActivity {
         Intent intentCreatedMe = getIntent();
         String id = intentCreatedMe.getStringExtra("id");
 
+        // finding the item we want to edit
         item = dataBase.getById(id);
 
+        //finds the view
         TextView creationTime = findViewById(R.id.timeCreation);
         TextView lastModify = findViewById(R.id.lastModify);
-        CheckBox checkBox = findViewById(R.id.checkBox);
+        CheckBox checkBox = findViewById(R.id.checkBoxEdit);
         EditText description = findViewById(R.id.descriptionEdit);
 
+        //sets the view with the current item data
         description.setText(item.getDescription());
-        creationTime.setText(item.getTimeCreation());
+        creationTime.setText(item.showTimeCreation());
         lastModify.setText(item.getLastModification());
         checkBox.setChecked(item.isDone());
 
+        //sets checkCox change listener
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked){
                 dataBase.markItemDone(item);
@@ -55,6 +61,7 @@ public class EditItemActivity extends AppCompatActivity {
             }
         });
 
+        //sets description changes listner
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,9 +79,32 @@ public class EditItemActivity extends AppCompatActivity {
                 lastModify.setText(item.getLastModification());
             }
         });
+    }
 
+    @Override
+    protected void onSaveInstanceState (@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("holder", dataBase);
+        outState.putSerializable("id", item.getId());
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savesInstanceState){
+        super.onRestoreInstanceState(savesInstanceState);
+        dataBase = (TodoItemsHolder) savesInstanceState.get("holder");
+        item = dataBase.getById(savesInstanceState.getString("id"));
 
+        //finds the views
+        TextView creationTime = findViewById(R.id.timeCreation);
+        TextView lastModify = findViewById(R.id.lastModify);
+        CheckBox checkBox = findViewById(R.id.checkBoxEdit);
+        EditText description = findViewById(R.id.descriptionEdit);
 
+        //sets the views
+        description.setText(item.getDescription());
+        creationTime.setText(item.showTimeCreation());
+        lastModify.setText(item.getLastModification());
+        checkBox.setChecked(item.isDone());
     }
 }
