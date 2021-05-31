@@ -46,9 +46,12 @@ public class TodoListActivity extends AppCompatActivity {
     editTextInsertTask.setVisibility(View.VISIBLE);
 
     //set observer to the liveData
-    dataBase.getPublicItemsLiveData().observe(this, todoItems -> adapter.setTodoItemList(todoItems));
+    dataBase.getPublicItemsLiveData().observe(this, todoItems -> {
+      adapter.setTodoItemList(todoItems);
+    });
 
-    //set listener to create item button
+
+            //set listener to create item button
     buttonCreateTodoItem.setOnClickListener(v -> {
       String input = String.valueOf(editTextInsertTask.getText());
       if (!input.isEmpty()){
@@ -60,18 +63,7 @@ public class TodoListActivity extends AppCompatActivity {
 
   }
 
-  @Override
-  protected void onSaveInstanceState (@NonNull Bundle outState) {
-    super.onSaveInstanceState(outState);
-    outState.putSerializable("holder", dataBase);
-  }
 
-  @Override
-  protected void onRestoreInstanceState(@NonNull Bundle savesInstanceState){
-    super.onRestoreInstanceState(savesInstanceState);
-    dataBase = (TodoItemsHolder) savesInstanceState.get("holder");
-    adapter.setTodoItemList(dataBase.getCurrentItems());
-  }
 
 }
 

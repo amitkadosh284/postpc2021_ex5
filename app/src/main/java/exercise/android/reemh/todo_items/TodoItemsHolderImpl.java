@@ -36,9 +36,6 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
     Set<String> keys = sp.getAll().keySet();
     for (String key: keys) {
       String itemSaveAsString = sp.getString(key, null);
-      System.out.println("****************************************************************************");
-      System.out.println(itemSaveAsString);
-      System.out.println("****************************************************************************");
       TodoItem item = stringToItem(itemSaveAsString);
       if (item != null){
         if (item.isDone()){
@@ -123,11 +120,11 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
   @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   public void markItemDone(TodoItem item) {
+    findAndRemoveFromDataBase(item);
+
     TodoItem newItem = new TodoItem(item.getDescription(), item.getTimeCreation(), item.getId());
     newItem.setDone(true);
     doneItems.add(newItem);
-
-    deleteItem(item);
 
     privateItemsLivaData.setValue(getCurrentItems());
 
@@ -139,11 +136,11 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
   @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   public void markItemInProgress(TodoItem item) {
+    findAndRemoveFromDataBase(item);
+
     TodoItem newItem = new TodoItem(item.getDescription(), item.getTimeCreation(), item.getId());
     newItem.setDone(false);
     toDoList.add(newItem);
-
-    deleteItem(item);
 
     privateItemsLivaData.setValue(getCurrentItems());
 
@@ -154,12 +151,7 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
 
   @Override
   public void deleteItem(TodoItem item) {
-    if (item.isDone()){
-      doneItems.remove(item);
-    }
-    else{
-      toDoList.remove(item);
-    }
+    findAndRemoveFromDataBase(item);
 
     privateItemsLivaData.setValue(getCurrentItems());
 
@@ -171,21 +163,23 @@ public class TodoItemsHolderImpl implements TodoItemsHolder {
   @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   public void editDescription(TodoItem item, String description) {
-    deleteItem(item);
-    TodoItem newItem = new TodoItem(description, item.getTimeCreation(), item.getId());
-    newItem.setDone(item.isDone());
-    if (newItem.isDone()){
-      doneItems.add(newItem);
-    }
-    else {
-      toDoList.add(newItem);
-    }
+    item.setDescription(description);
+    item.setLastModification(LocalDateTime.now().toString());
 
     privateItemsLivaData.setValue(getCurrentItems());
 
     SharedPreferences.Editor editor = sp.edit();
-    editor.putString(newItem.getId(), newItem.getStringRepresentation());
+    editor.putString(item.getId(), item.getStringRepresentation());
     editor.apply();
+  }
+
+  private void findAndRemoveFromDataBase(TodoItem item){
+    if (item.isDone()){
+      doneItems.remove(item);
+    }
+    else{
+      toDoList.remove(item);
+    }
   }
 
 }

@@ -36,6 +36,7 @@ public class EditItemActivity extends AppCompatActivity {
         Intent intentCreatedMe = getIntent();
         String id = intentCreatedMe.getStringExtra("id");
 
+
         // finding the item we want to edit
         item = dataBase.getById(id);
 
@@ -51,6 +52,7 @@ public class EditItemActivity extends AppCompatActivity {
         lastModify.setText(item.getLastModification());
         checkBox.setChecked(item.isDone());
 
+
         //sets checkCox change listener
         checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked){
@@ -61,7 +63,7 @@ public class EditItemActivity extends AppCompatActivity {
             }
         });
 
-        //sets description changes listner
+        //sets description changes listener
         description.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,30 +83,4 @@ public class EditItemActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onSaveInstanceState (@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("holder", dataBase);
-        outState.putSerializable("id", item.getId());
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savesInstanceState){
-        super.onRestoreInstanceState(savesInstanceState);
-        dataBase = (TodoItemsHolder) savesInstanceState.get("holder");
-        item = dataBase.getById(savesInstanceState.getString("id"));
-
-        //finds the views
-        TextView creationTime = findViewById(R.id.timeCreation);
-        TextView lastModify = findViewById(R.id.lastModify);
-        CheckBox checkBox = findViewById(R.id.checkBoxEdit);
-        EditText description = findViewById(R.id.descriptionEdit);
-
-        //sets the views
-        description.setText(item.getDescription());
-        creationTime.setText(item.showTimeCreation());
-        lastModify.setText(item.getLastModification());
-        checkBox.setChecked(item.isDone());
-    }
 }
